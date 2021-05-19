@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Form, Button} from "react-bootstrap";
 
 export function RegistrationForm () {
@@ -11,6 +11,16 @@ export function RegistrationForm () {
     const [nameError, setNameError] = useState('Name field must match /^[a-zA-Z\\s]{1,120}$/')
     const [emailError, setEmailError] = useState('Email field should contain at least 1 symbol')
     const [passwordError, setPasswordError] = useState('Password field should contain at least 8 symbols')
+    const [formValid, setFormValid] = useState(false)
+
+    useEffect( () => {
+        if (nameError || emailError || passwordError) {
+            setFormValid(false)
+        }
+        else {
+            setFormValid(true)
+        }
+    }, [nameError,emailError,passwordError])
 
     const blurHandler = (e) => {
         switch (e.target.name) {
@@ -77,7 +87,7 @@ export function RegistrationForm () {
                 <p><input onChange={e=> emailHandler(e)} onBlur={e=> blurHandler(e)} value={email} name='email' type='email' placeholder='Enter e-mail'/></p>
                 {(passwordDirty && passwordError) && <div style={{'color': 'red'}}>{passwordError}</div>}
                 <p><input onChange={e=> passwordHandler(e)} onBlur={e=> blurHandler(e)} value={password} name='password' type='password' placeholder='Enter password'/></p>
-                <Button style={{'margin-top': '10px'}} onClick={handleClick}>Sign in</Button>
+                <Button disabled={!formValid} style={{'margin-top': '10px'}} onClick={handleClick}>Sign in</Button>
             </Form>
         </div>
     )
